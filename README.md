@@ -36,6 +36,10 @@ Running the following command will download all necessary glove data sets, build
 ```shell
 python closeenough.py --init
 ```
+Subsequently you can just run the app, as long as the files are in the data directory
+```shell
+python closeenough.py
+```
 ##### Configuration
 
 Closeenough can be configured to use a preexisiting glove data set and annoy files as follows:
