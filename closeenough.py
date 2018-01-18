@@ -98,5 +98,5 @@ def hello():
     return "done"
 
 
-print "goto http://localhost/static/search.html for home page"
+print "goto http://localhost:" + flaskport +"/static/search.html for home page"
 app.run(host="0.0.0.0", port=flaskport)
