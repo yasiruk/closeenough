@@ -6,9 +6,7 @@ from flask import Flask, request, jsonify
 
 from annoybuild import buildAnnoyIndex
 from annoylookup import WordStore
-import ssl
 
-ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__)
 args = sys.argv
