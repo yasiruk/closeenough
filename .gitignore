@@ -2,7 +2,7 @@
 *.pem
 *.pyc
 *.idea
-data
+data_
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

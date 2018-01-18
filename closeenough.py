@@ -6,20 +6,27 @@ from flask import Flask, request, jsonify
 
 from annoybuild import buildAnnoyIndex
 from annoylookup import WordStore
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__)
 args = sys.argv
 # default locations
-gloveDataSetFileLocation = "data" + os.sep + "glove.6B.50d.txt"
+datadir = "data"
+gloveDataSetFileLocation = datadir + os.sep + "glove.6B.50d.txt"
 gloveDimension = 50
-annoyFileLocation = "data" + os.sep + "glove.6B.50d.ann"
+annoyFileLocation = datadir + os.sep + "glove.6B.50d.ann"
 flaskport = 9000
-gloveUrl = "https://yasiru.me/glove.6B.50d.txt"
+gloveUrl = "http://data.neuralnoise.com/jack/embeddings/glove.6B.50d.txt"
+
 
 def printUsage():
     print "Invalid args. Usage:"
-    print args[0] + " [glove dimension] [glove data set txt file] [annoy index location]"
-    print "eg: " + args[0] + " 50 glove.6B.txt glove.6B.ann"
+    print ""
+    print "\t" + args[0] + " [glove data set txt file] [annoy index location] [http port]"
+    print "\teg: " + args[0] + " 50 glove.6B.txt glove.6B.ann"
+    print ""
     print "Alternatively run with '--init' argument to download glove data set, build indexes and proceed"
 
 
@@ -30,6 +37,9 @@ def findGloveDim(glovefile):
 
 def init():
     global gloveDimension
+    if not os.path.exists(datadir):
+        os.mkdir(datadir)
+
     gloveOpenner = urllib.URLopener()
     print "Downloading glove file from " + gloveUrl
     gloveOpenner.retrieve(gloveUrl, gloveDataSetFileLocation)
@@ -39,9 +49,9 @@ def init():
     buildAnnoyIndex(gloveDimension, gloveDataSetFileLocation, annoyFileLocation)
 
 
-if len(args) == 5:
-    gloveDataSetFileLocation = str(args[2])
-    annoyFileLocation = str(args[3])
+if len(args) == 4:
+    gloveDataSetFileLocation = str(args[1])
+    annoyFileLocation = str(args[2])
     if not os.path.exists(gloveDataSetFileLocation):
         print "glove data file not found"
         printUsage()
@@ -51,7 +61,7 @@ if len(args) == 5:
         printUsage()
         sys.exit(3)
     try:
-        flaskport = int(args[4])
+        flaskport = int(args[3])
         if flaskport < 1:
             raise ValueError
     except ValueError:
@@ -65,6 +75,7 @@ else:
         printUsage()
         sys.exit(1)
 
+gloveDimension = findGloveDim(gloveDataSetFileLocation)
 ws = WordStore(gloveDimension, gloveDataSetFileLocation, annoyFileLocation)
 
 
@@ -88,3 +99,4 @@ def hello():
 
 
 app.run(host="0.0.0.0", port=flaskport)
+print "goto http://localhost/static/search.html for home page"
