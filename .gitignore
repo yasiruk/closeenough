@@ -2,8 +2,7 @@
 *.pem
 *.pyc
 *.idea
-data_
-
+data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -106,3 +105,4 @@ ENV/
 # mypy
 .mypy_cache/
 >>>>>>> 49bb7c23430c8e70d2e22d7f2d96cf11a18dcd2b
+/data/

@@ -45,7 +45,7 @@ def init():
     gloveOpenner.retrieve(gloveUrl, gloveDataSetFileLocation)
     print "File downloaded to " + gloveDataSetFileLocation
     gloveDimension = findGloveDim(gloveDataSetFileLocation)
-    print "Glove dimension " + gloveDimension
+    print "Glove dimension " + str(gloveDimension)
     buildAnnoyIndex(gloveDimension, gloveDataSetFileLocation, annoyFileLocation)
 
 
