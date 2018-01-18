@@ -60,7 +60,7 @@ class WordStore:
         self.phoneticLookup = {}
         self.annoyIndex = AnnoyIndex(50)
         print "Loading annoy index"
-        self.annoyIndex.load(annoy_index_file_location)  # "glove.6b.50d.ann"
+        self.annoyIndex.load(annoy_index_file_location)  # "glove.6B.50d.ann"
 
         for line in iter(self.mmGloveData.readline, ""):
             word = line.split(" ")[0]
@@ -292,7 +292,7 @@ class Phrase:
         return self.content + "(" + str(self.zscore) + ")"
 
 
-# wordStore = WordStore(50, "../glove.6B.50d.txt", "glove.6b.50d.ann")
+# wordStore = WordStore(50, "../glove.6B.50d.txt", "glove.6B.50d.ann")
 
 # while True:
 #     qPhrase = raw_input("Word : ")

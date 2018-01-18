@@ -70,8 +70,15 @@ else:
     if len(args) == 2 and args[1] == "--init":
         init()
     else:
-        printUsage()
-        sys.exit(1)
+        print "Attempting to use default files to initialize.."
+        if not os.path.exists(gloveDataSetFileLocation):
+            print "glove data file not found"
+            printUsage()
+            sys.exit(2)
+        if not os.path.exists(annoyFileLocation):
+            print "Annoy index file not found"
+            printUsage()
+            sys.exit(3)
 
 gloveDimension = findGloveDim(gloveDataSetFileLocation)
 ws = WordStore(gloveDimension, gloveDataSetFileLocation, annoyFileLocation)
