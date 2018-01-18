@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Thingy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+    <div class="search">
+
+        <input id="query" type="text" class="searchTerm" placeholder="Search for a word or phrase"
+               onkeypress="processInput(event)">
+        <button type="submit" class="searchButton" onclick="performQuery()">
+            Search<i class="fa fa-search"></i>
+        </button>
+
+    </div>
+    <div id="result">
+
+    </div>
+</div>
+<script>
+    function query(q, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/search?phrase=" + encodeURIComponent(q));
+        xhr.onreadystatechange = function () {
+            if (xhr.status === 200) {
+                callback(xhr.responseText, Date.now() - xhr.requestStartTimeMs);
+            }
+        };
+        xhr.send();
+        xhr.requestStartTimeMs = Date.now();
+
+    }
+
+    function populateResults(query, results) {
+        var innerHTML = "";
+        var resultElement = document.getElementById('result');
+
+        if (results.status === "Error") {
+            innerHTML = "<h3 class='error'>Something went wrong</h3>"
+            resultElement.innerHTML = innerHTML;
+        } else if (results.status === "Success") {
+            innerHTML = "<h3 class='result'>'" + query + "'</h3>\n";
+            if (results.autocorrect && results.autocorrect.length > 0) {
+                innerHTML += "<div class='autocorrect word'> Did you mean ";
+                results.autocorrect.forEach(function (word) {
+                    innerHTML += "<a href='#'>" + word + "</a>,\n"
+                });
+                innerHTML += "</div>";
+            }
+            if (results.results && results.results.length > 0) {
+                innerHTML += "<ul>\n";
+                if (results.results.length > 10)
+                    results.results = results.results.splice(0, 10);
+                results.results.forEach(function (similarWord) {
+                    innerHTML += "<li><a href='#' class='word'>" + similarWord + "</a></li>\n";
+                });
+                innerHTML += "</ul>";
+            }
+        }
+
+        resultElement.innerHTML = innerHTML;
+    }
+
+    function processInput(e) {
+        if (e && e.keyCode === 13) {
+            e.preventDefault();
+            performQuery()
+        }
+    }
+
+    function performQuery() {
+
+        var elem = document.getElementById('query');
+        var res = document.getElementById('result');
+        if (elem.value.trim().length > 0) {
+            query(elem.value.trim(), function (response, time) {
+                console.log(response, time);
+                console.log(JSON.parse(response));
+                populateResults(elem.value.trim(), JSON.parse(response));
+            })
+        }
+
+    }
+
+    document.addEventListener('click', function (e) {
+            if (e.target && e.target.className.indexOf('word') !== -1) {
+                var elem = document.getElementById('query');
+                elem.value = e.target.innerHTML;
+                performQuery();
+            }
+        }
+    );
+
+    document.getElementById("query").addEventListener("keyup", function (event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("result").click();
+        }
+    })
+</script>
+</body>
+</html>
