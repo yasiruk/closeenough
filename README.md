@@ -3,7 +3,7 @@ A Simple Synonym and similar word searching python flask app using wordnet and g
 
 #### Dependencies
 
-Closeenough is written using python 2 and depends on the following
+Closeenough is written using **python 2** and depends on the following
 
 - [flask](http://flask.pocoo.org/)
 - [annoy](https://github.com/spotify/annoy)
